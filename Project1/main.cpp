@@ -119,16 +119,16 @@ int main()
 
         }
         
-        player.handleMovement();
+        player.handleMovement(map.getMap());
 
         Vector2f currentLocXY = player.getLocation();
         int currentGridLocX = (currentLocXY.x + 10.f) / 64;
         int currentGridLocY = (currentLocXY.y + 10.f) / 64;
 
 
-        player.handleLocs(Vector2f(currentGridLocX, currentGridLocY));
+        //player.handleLocs(Vector2f(currentGridLocX, currentGridLocY));
 
-        player.collide(map.getMap());
+        //player.collide(map.getMap());
         
 
 

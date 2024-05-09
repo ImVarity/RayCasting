@@ -1,5 +1,7 @@
 #include <iostream>
+#include <stdlib.h>
 #include "player.h"
+
 #define M_PI 3.14159265358979323846 
 #define windowTWO {1200, 800}
 #define windowONE { 16 * 64, 16 * 64 }
@@ -9,25 +11,14 @@ Player::Player(float x, float y) : shape(this->radius) {
 }
 
 void Player::handleKeys(Event& event) {
-    if (Keyboard::isKeyPressed(Keyboard::W))
-        this->moveUp = true;
-    else
-        this->moveUp = false;
 
-    if (Keyboard::isKeyPressed(Keyboard::A))
-        this->moveLeft = true;
-    else
-        this->moveLeft = false;
+    this->moveUp = Keyboard::isKeyPressed(Keyboard::W) ? true : false;
+    this->moveDown = Keyboard::isKeyPressed(Keyboard::S) ? true : false;
+    this->moveLeft = Keyboard::isKeyPressed(Keyboard::A) ? true : false;
+    this->moveRight = Keyboard::isKeyPressed(Keyboard::D) ? true : false;
 
-    if (Keyboard::isKeyPressed(Keyboard::S))
-        this->moveDown = true;
-    else
-        this->moveDown = false;
 
-    if (Keyboard::isKeyPressed(Keyboard::D))
-        this->moveRight = true;
-    else
-        this->moveRight = false;
+
 
     if (Keyboard::isKeyPressed(Keyboard::E))
         this->rotateClockwise = true;
@@ -41,7 +32,9 @@ void Player::handleKeys(Event& event) {
 }
 
 
-void Player::handleMovement() {
+void Player::handleMovement(std::vector<std::vector<int>>& map) {
+
+    checkCollision(this->moveUp, this->moveDown, this->moveLeft, this->moveRight, map);
 
     if (this->moveUp && this->moveRight) // Diagonally up right
         this->location += Vector2f(cos(45 * M_PI / 180), -sin(45 * M_PI / 180)) * this->speed;
@@ -143,6 +136,83 @@ Vector2f Player::getLocation() const {
 }
 
 
+void Player::checkCollision(bool up, bool down, bool left, bool right, std::vector<std::vector<int>>& map) {
+
+    float directionX = (left ? -this->speed : 0) + (right ? this->speed : 0);
+    float directionY = (up ? -this->speed : 0) + (down ? this->speed : 0);
+
+
+
+    float nextX = this->location.x + directionX;
+    float nextY = this->location.y + directionY;
+
+    //if (std::abs(directionX) > 0 && std::abs(directionY) > 0) {
+    //    nextX = this->location.x + std::sqrt(2) / 2 * directionX;
+    //    nextY = this->location.y + std::sqrt(2) / 2 * directionY;
+    //}
+    //
+    //std::cout << nextX << ", " << nextY << std::endl;
+
+
+
+    int nextGridLocY = (nextX + this->radius) / 64;
+    int nextGridLocX = (nextY + this->radius) / 64;
+
+    int currGridLocY = (this->location.x + this->radius) / 64;
+    int currGridLocX = (this->location.y + this->radius) / 64;
+
+    if (map[currGridLocX][currGridLocY] == 1)
+        std::cout << "im in a wall" << std::endl;
+
+
+    if (map[nextGridLocX][nextGridLocY] == 1) // about to enter a wall
+    {
+        bool collidingDown = nextGridLocX - 1 == currGridLocX;
+        bool collidingUp = nextGridLocX + 1 == currGridLocX;
+        bool collidingRight = nextGridLocY - 1 == currGridLocY;
+        bool collidingLeft = nextGridLocY + 1 == currGridLocY;
+
+
+
+
+
+        if (collidingUp) {
+            this->moveUp = false;
+            std::cout << "up, " << collidingUp << std::endl;
+            if (collidingRight)
+                this->moveRight = false;
+        }
+
+        if (collidingRight) {
+            this->moveRight = false;
+            std::cout << "right, " << collidingRight << std::endl;
+            if (collidingDown)
+                this->moveDown = false;
+        }
+
+        if (collidingDown) {
+            this->moveDown = false;
+            std::cout << "down, " << collidingDown << std::endl;
+            if (collidingLeft)
+                this->moveLeft = false;
+        }
+
+        if (collidingLeft) {
+            this->moveLeft = false;
+            std::cout << "left, " << collidingLeft << std::endl;
+            if (collidingUp)
+                this->moveUp = false;
+
+        }
+
+
+        
+
+    }
+
+}
+
+
 bool Player::collide(std::vector<std::vector<int>>& map) {
 
     Vector2f prevLoc = this->queueLoc.front();
@@ -173,16 +243,6 @@ bool Player::collide(std::vector<std::vector<int>>& map) {
         }
     }
 
-
-    
-     
-
-
     return true;
-
-
-
-
-
 
 }

@@ -15,7 +15,7 @@ public:
 	Player(float x, float y);
 	
 	void handleKeys(Event& event);
-	void handleMovement();
+	void handleMovement(std::vector<std::vector<int>>& map);
 
 	void setSpeed(float speed);
 
@@ -39,7 +39,11 @@ public:
 
 	Vector2f getLocation() const;
 
+
+
 private:
+
+	void checkCollision(bool up, bool down, bool left, bool right, std::vector<std::vector<int>>& map);
 
 	Vector2f location;
 	CircleShape shape;
