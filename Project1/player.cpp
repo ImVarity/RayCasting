@@ -6,7 +6,7 @@
 #define windowTWO {1200, 800}
 #define windowONE { 16 * 64, 16 * 64 }
 
-Player::Player(float x, float y) : shape(this->radius) {
+Player::Player(float x, float y) : shape(10.f) {
 	this->location = Vector2f(x, y);
 }
 
@@ -16,8 +16,6 @@ void Player::handleKeys(Event& event) {
     this->moveDown = Keyboard::isKeyPressed(Keyboard::S) ? true : false;
     this->moveLeft = Keyboard::isKeyPressed(Keyboard::A) ? true : false;
     this->moveRight = Keyboard::isKeyPressed(Keyboard::D) ? true : false;
-
-
 
 
     if (Keyboard::isKeyPressed(Keyboard::E))
@@ -34,7 +32,7 @@ void Player::handleKeys(Event& event) {
 
 void Player::handleMovement(std::vector<std::vector<int>>& map) {
 
-    checkCollision(this->moveUp, this->moveDown, this->moveLeft, this->moveRight, map);
+    (checkCollision(this->moveUp, this->moveDown, this->moveLeft, this->moveRight, map));
 
     if (this->moveUp && this->moveRight) // Diagonally up right
         this->location += Vector2f(cos(45 * M_PI / 180), -sin(45 * M_PI / 180)) * this->speed;
@@ -82,6 +80,10 @@ void Player::handleMovement(std::vector<std::vector<int>>& map) {
 
 void Player::setSpeed(float speed) {
     this->speed = speed;
+}
+
+void Player::setLocation(const Vector2f& loc) {
+    this->location = loc;
 }
 
 
@@ -136,79 +138,106 @@ Vector2f Player::getLocation() const {
 }
 
 
+
+
 void Player::checkCollision(bool up, bool down, bool left, bool right, std::vector<std::vector<int>>& map) {
 
     float directionX = (left ? -this->speed : 0) + (right ? this->speed : 0);
     float directionY = (up ? -this->speed : 0) + (down ? this->speed : 0);
+    
+    float X = this->location.x;
+    float Y = this->location.y;
 
-
-
-    float nextX = this->location.x + directionX;
-    float nextY = this->location.y + directionY;
-
-    //if (std::abs(directionX) > 0 && std::abs(directionY) > 0) {
-    //    nextX = this->location.x + std::sqrt(2) / 2 * directionX;
-    //    nextY = this->location.y + std::sqrt(2) / 2 * directionY;
-    //}
-    //
-    //std::cout << nextX << ", " << nextY << std::endl;
-
-
-
-    int nextGridLocY = (nextX + this->radius) / 64;
-    int nextGridLocX = (nextY + this->radius) / 64;
-
-    int currGridLocY = (this->location.x + this->radius) / 64;
-    int currGridLocX = (this->location.y + this->radius) / 64;
-
-    if (map[currGridLocX][currGridLocY] == 1)
-        std::cout << "im in a wall" << std::endl;
-
-
-    if (map[nextGridLocX][nextGridLocY] == 1) // about to enter a wall
+    for (int i = 0; i < 4; i++)
     {
-        bool collidingDown = nextGridLocX - 1 == currGridLocX;
-        bool collidingUp = nextGridLocX + 1 == currGridLocX;
-        bool collidingRight = nextGridLocY - 1 == currGridLocY;
-        bool collidingLeft = nextGridLocY + 1 == currGridLocY;
-
-
-
-
-
-        if (collidingUp) {
-            this->moveUp = false;
-            std::cout << "up, " << collidingUp << std::endl;
-            if (collidingRight)
-                this->moveRight = false;
+        if (i == 0) {
+            X = this->location.x;
+            Y = this->location.y - 10.f;
+        }
+        else if (i == 1) {
+            X = this->location.x + 10.f;
+            Y = this->location.y;
+        }
+        else if (i == 2) {
+            X = this->location.x;
+            Y = this->location.y + 10.f;
+        }
+        else if (i == 3) {
+            X = this->location.x - 10.f;
+            Y = this->location.y;
         }
 
-        if (collidingRight) {
-            this->moveRight = false;
-            std::cout << "right, " << collidingRight << std::endl;
-            if (collidingDown)
-                this->moveDown = false;
+        X += this->radius;
+        Y += this->radius;
+        float nextHorizontal = X + directionX;
+        float nextVertical = Y + directionY;
+
+        int nextGridHorizontal = nextHorizontal / 64;
+        int nextGridVertical = nextVertical / 64;
+
+
+        int currGridHorizontal = X / 64;
+        int currGridVertical = Y / 64;
+
+
+
+        if (map[nextGridVertical][nextGridHorizontal] == 1) // about to enter a wall
+        {
+            bool collidingDown = nextGridVertical - 1 == currGridVertical;
+            bool collidingUp = nextGridVertical + 1 == currGridVertical;
+            bool collidingRight = nextGridHorizontal - 1 == currGridHorizontal;
+            bool collidingLeft = nextGridHorizontal + 1 == currGridHorizontal;
+
+
+            if (std::abs(currGridHorizontal - nextGridHorizontal) == 1 && std::abs(currGridVertical - nextGridVertical) == 1) { // about to enter a wall diagonally
+                if (map[nextGridVertical][currGridHorizontal] == 0) { // allowed to move vertically
+                    if (collidingRight)
+                        this->moveRight = false;
+                    else if (collidingLeft)
+                        this->moveLeft = false;
+
+                }
+
+                else if (map[currGridVertical][nextGridHorizontal] == 0) { // allowed to move horizontally
+                    if (collidingUp)
+                        this->moveUp = false;
+                    else if (collidingDown)
+                        this->moveDown = false;
+                }
+                else {
+                    if (collidingUp)
+                        this->moveUp = false;
+                    else if (collidingDown)
+                        this->moveDown = false;
+                    if (collidingRight)
+                        this->moveRight = false;
+                    else if (collidingLeft)
+                        this->moveLeft = false;
+                }
+
+            }
+            else if (std::abs(currGridVertical - nextGridVertical) == 1) { // about to hit something vertically
+                if (collidingUp)
+                    this->moveUp = false;
+                else if (collidingDown)
+                    this->moveDown = false;
+            }
+
+            else { // about to hit something horizontall
+                if (collidingLeft)
+                    this->moveLeft = false;
+                else if (collidingRight)
+                    this->moveRight = false;
+            }
+
         }
 
-        if (collidingDown) {
-            this->moveDown = false;
-            std::cout << "down, " << collidingDown << std::endl;
-            if (collidingLeft)
-                this->moveLeft = false;
-        }
-
-        if (collidingLeft) {
-            this->moveLeft = false;
-            std::cout << "left, " << collidingLeft << std::endl;
-            if (collidingUp)
-                this->moveUp = false;
-
-        }
-
-
-        
 
     }
+    
+   
+
+
 
 }
 

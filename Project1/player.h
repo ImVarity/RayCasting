@@ -24,6 +24,8 @@ public:
 
 	float getAngle() const;
 
+	float getRadius() const;
+
 	CircleShape getShape() const;
 
 	float getOffset() const;
@@ -36,6 +38,8 @@ public:
 
 	void setCurrGridLoc(Vector2f loc);
 	void setPrevGridLoc(Vector2f loc);
+
+	void setLocation(const Vector2f& loc);
 
 	Vector2f getLocation() const;
 

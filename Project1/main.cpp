@@ -72,8 +72,13 @@ int main()
     std::vector<std::array<Vertex, 2>> walls;
 
 
+    //ray rays[720]; // Assuming ray is a class or struct with a setAngle function
 
-
+    //float angle = 0.f; // Starting angle
+    //for (int i = 0; i < 720; ++i) { // Iterate 720 times for 720 rays
+    //    rays[i].setAngle(angle); // Set the angle for the current ray
+    //    angle += 0.5f; // Increment the angle by 0.5 degrees
+    //}
 
 
     ray rays[360];
@@ -81,6 +86,7 @@ int main()
     for (int i = 0; i < 360; i++) {
         rays[i].setAngle((float)i);
     }
+
 
     Map map;
     map.createMap(walls);
@@ -90,14 +96,15 @@ int main()
     float rayLength = 1000.f;
 
 
-    CircleShape playerShape(10.f);
-    float playerOffset = 10.f;
 
     Vector2f playerLoc(windowSize[0] / 2, windowSize[1] / 2);
 
 
     Player player(windowSize[0] / 2, windowSize[1] / 2);
     player.setSpeed(1.f);
+
+    CircleShape playerShape = player.getShape();
+    float playerOffset = player.getOffset();
 
 
     
@@ -121,14 +128,7 @@ int main()
         
         player.handleMovement(map.getMap());
 
-        Vector2f currentLocXY = player.getLocation();
-        int currentGridLocX = (currentLocXY.x + 10.f) / 64;
-        int currentGridLocY = (currentLocXY.y + 10.f) / 64;
 
-
-        //player.handleLocs(Vector2f(currentGridLocX, currentGridLocY));
-
-        //player.collide(map.getMap());
         
 
 
@@ -141,8 +141,6 @@ int main()
         // Clear
         window.clear();
         window2.clear();
-
-
 
 
 
