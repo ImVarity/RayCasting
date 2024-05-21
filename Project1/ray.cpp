@@ -17,6 +17,10 @@ void ray::setAngle(float angle) {
 	this->angle = angle;
 }
 
+float ray::getAngle() const {
+	return this->angle;
+}
+
 
 void ray::setHead(float x, float y) {
 	this->line[0].position = Vector2f(x, y);
@@ -25,7 +29,16 @@ void ray::setTail(float x, float y) {
 	this->line[1].position = Vector2f(x, y);
 }
 
-
-const sf::Vertex* ray::getLine() const {
+const Vertex* ray::getLine() const {
 	return line;
 }
+
+float ray::getColumn() const {
+	return this->column;
+}
+
+void ray::setColumn(const float& column) {
+	this->column = column;
+}
+
+
