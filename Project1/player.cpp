@@ -6,8 +6,9 @@
 #define windowTWO {1200, 800}
 #define windowONE { 16 * 64, 16 * 64 }
 
-Player::Player(float x, float y) : shape(10.f) {
+Player::Player(float x, float y, float speed) : shape(10.f) {
 	this->location = Vector2f(x, y);
+    this->speed = speed;
 }
 
 void Player::handleKeys(Event& event) {
@@ -95,6 +96,9 @@ float Player::getDY() const {
     return this->dy;
 }
 
+float Player::getRadius() const {
+    return this->radius;
+}
 
 float Player::getAngle() const {
     return this->angle;
@@ -108,36 +112,10 @@ float Player::getOffset() const {
     return this->radius;
 }
 
-void Player::setCurrGridLoc(Vector2f loc) {
-    this->currGridLoc = loc;
-}
-
-void Player::setPrevGridLoc(Vector2f loc) {
-    this->prevGridLoc = loc;
-}
-
-void Player::handleLocs(Vector2f currentLoc) {
-    
-    if (this->queueLoc.size() < 2)
-        this->queueLoc.push(currentLoc);
-    else {
-        if (this->queueLoc.back() == currentLoc)
-            return;
-        else
-        {
-            this->queueLoc.push(currentLoc);
-            this->queueLoc.pop();
-        }
-    }
-
-
-}
 
 Vector2f Player::getLocation() const {
     return this->location;
 }
-
-
 
 
 void Player::checkCollision(bool up, bool down, bool left, bool right, std::vector<std::vector<int>>& map) {
@@ -234,44 +212,6 @@ void Player::checkCollision(bool up, bool down, bool left, bool right, std::vect
 
 
     }
-    
    
-
-
-
-}
-
-
-bool Player::collide(std::vector<std::vector<int>>& map) {
-
-    Vector2f prevLoc = this->queueLoc.front();
-    Vector2f currLoc = this->queueLoc.back();
-
-    float differenceX = currLoc.x - prevLoc.x;
-    float differenceY = currLoc.y - prevLoc.y;
-
-
-    if (map[currLoc.y][currLoc.x] == 1) {
-
-
-        if (differenceX == 1 && differenceY == 0) {
-            std::cout << "colliding right wall" << std::endl;
-            this->moveRight = false;
-        }
-        if (differenceX == -1 && differenceY == 0) {
-            std::cout << "colliding left wall" << std::endl;
-            this->moveLeft = false;
-        }
-        if (differenceX == 0 && differenceY == -1) {
-            std::cout << "colliding top wall" << std::endl;
-            this->moveUp = false;
-        }
-        if (differenceX == 0 && differenceY == 1) {
-            std::cout << "colliding bottom wall" << std::endl;
-            this->moveDown = false;
-        }
-    }
-
-    return true;
 
 }

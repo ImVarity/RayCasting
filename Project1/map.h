@@ -10,10 +10,8 @@
 class Map {
 public:
 	Map();
-	//Map(int width, int height);
 
 	std::vector<std::vector<int>>& getMap();
-
 
 	void createMap(std::vector<std::array<Vertex, 2>>& walls);
 	void handleMap(Event event, Vector2i mousePosition, std::vector<std::array<Vertex, 2>>& walls);

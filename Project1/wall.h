@@ -6,7 +6,6 @@
 class Wall {
 public:
 	Wall();
-	Wall(float distance, float column, float percentOfWall, const sf::Color textures[][64]);
 	
 	void drawWall3D(float distance, float column);
 
@@ -19,7 +18,7 @@ public:
 	sf::Sprite getTexture();
 	sf::Image getImage();
 
-	void CC(float distance, float column, float percentOfWall, const sf::Color textures[][64]);
+	void CC(float distance, float column, float percentOfWall);
 
 
 	float getPercentage();
@@ -27,8 +26,6 @@ public:
 	float getDistance();
 	float getColumnToTexture();
 
-
-	sf::Image emptyWall();
 
 private:
 	float adjustedDistance(float distance, float column); // Fixes the fisheye
@@ -43,10 +40,6 @@ private:
 	float percentage;
 	float distance;
 	float columnToTexture;
-
-	sf::Sprite sprite;
-
-	sf::Image img;
 
 	sf::RectangleShape shape;
 };

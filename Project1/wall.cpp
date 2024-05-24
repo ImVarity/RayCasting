@@ -7,46 +7,7 @@
 
 
 
-Wall::Wall() {
-
-}
-
-Wall::Wall(float distance, float column, float percentOfWall, const sf::Color textures[][64]) {
-
-	if (distance > 255)
-		return;
-
-	distance = adjustedDistance(distance, column);
-	this->alpha = 255 - distance;
-	float percentage = (255 - distance) / 255;
-	this->height = percentage * 800;
-	this->width = 1200 / 120;
-	this->shape.setSize(sf::Vector2f(width, height));
-	this->shape.setPosition(column * 20.f, 800.f / 2 - (this->height / 2));
-	this->shape.setFillColor(sf::Color(223, 0, 132, this->alpha));
-
-	int columnToTexture = this->customRound(percentOfWall);
-
-
-	sf::Image image;
-	image.create(1, 64);
-
-	for (int y = 0; y < 64; y++) {
-		image.setPixel(0, y, textures[columnToTexture][y]);
-	}
-
-	this->img = image;
-
-	//sf::Texture columnTexture;
-	//columnTexture.loadFromImage(image);
-
-	//sf::Sprite sprite(columnTexture);
-	//sprite.setPosition(column * 20.f, 0);
-
-	//this->sprite = sprite;
-
-
-}
+Wall::Wall() {}
 
 sf::RectangleShape Wall::getWall() const {
 	return this->shape;
@@ -109,7 +70,7 @@ sf::Sprite Wall::wallTexture(float percentOfWall, float column3D, const sf::Colo
 
 
 
-void Wall::CC(float distance, float column, float percentOfWall, const sf::Color textures[][64]) {
+void Wall::CC(float distance, float column, float percentOfWall) {
 
 
 	this->distance = distance;
@@ -133,15 +94,6 @@ void Wall::CC(float distance, float column, float percentOfWall, const sf::Color
 
 	int columnToTexture = this->customRound(percentOfWall);
 	this->columnToTexture = columnToTexture; // because it might become 64 when max index is 63
-
-	//sf::Image image;
-	//image.create(1, 64);
-
-	//for (int y = 0; y < 64; y++) {
-	//	image.setPixel(0, y, textures[columnToTexture][y]);
-	//}
-
-	//this->img = image;
 }
 
 
@@ -162,25 +114,6 @@ int Wall::customRound(float num) {
 	return (convert - std::floor(convert) < 0.5) ? std::floor(convert) : std::ceil(convert);
 }
 
-
-sf::Sprite Wall::getTexture() {
-	return this->sprite;
-}
-
-sf::Image Wall::getImage() {
-	return this->img;
-}
-
-sf::Image Wall::emptyWall() {
-	sf::Image empty;
-	empty.create(1, 64);
-
-	for (int y = 0; y < 64; y++) {
-		empty.setPixel(0, y, sf::Color(0, 0, 0));
-	}
-
-	return empty;
-}
 
 float Wall::getDistance() {
 	return this->distance;

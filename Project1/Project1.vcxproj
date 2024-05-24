@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="global.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="map.cpp" />
