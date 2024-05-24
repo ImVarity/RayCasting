@@ -1,6 +1,5 @@
 #pragma once
 #include "SFML\Graphics.hpp"
-#include <unordered_map>
 
 
 class Wall {
@@ -17,6 +16,8 @@ public:
 	float getDistance();
 	float getColumnToTexture();
 
+	void setTextureNumber(int number);
+	int getTextureNumber() const;
 
 private:
 	float adjustedDistance(float distance, float column); // Fixes the fisheye
@@ -27,10 +28,11 @@ private:
 	float width = 0;
 	float height = 0;
 	float alpha = 255;
-	float columnPosition;
-	float percentage;
 	float distance;
 	float columnToTexture;
+
+	// This is the wall texture going to be used
+	int textureNumber;
 
 	sf::RectangleShape shape;
 };

@@ -38,7 +38,6 @@ int main()
     std::vector<std::array<Vertex, 2>> walls;
 
 
-
     // the columns on the projection screen
     Wall columns[320];
 
@@ -52,7 +51,8 @@ int main()
     float increment = float(FOV) / float(rayCount);
     float count = 0;
     int sampleI = 0;
-    while (sampleI < 320) {
+    while (sampleI < 320) 
+    {
         rays[sampleI].setAngle(count);
         count += increment;
         sampleI++;
@@ -80,14 +80,6 @@ int main()
     CircleShape playerShape = player.getShape();
     float playerOffset = player.getOffset();
 
-
-
-    CircleShape hit(15.f, 15.f);
-
-    hit.setPosition(Vector2f(400.f, 400.f));
-
-    Vertex random(Vector2f(1.f, 1.f));
-    Vertex random2(Vector2f(1.f, 1.f));
 
 
     while (window.isOpen() && window2.isOpen())
@@ -183,10 +175,14 @@ int main()
 
                 if (MapLoc.x >= 0 && MapLoc.x < gridLength && MapLoc.y >= 0 && MapLoc.y < gridLength)
                 {
-                    if (map.getMap()[MapLoc.y][MapLoc.x] == 1)
+                    if (map.getMap()[MapLoc.y][MapLoc.x] > 0)
                     {
                         bTileFound = true;
+
+                        // Sets the wall texture to use
+                        columns[rayI].setTextureNumber(map.getMap()[MapLoc.y][MapLoc.x]);
                     }
+
                 }
             }
 
@@ -212,9 +208,8 @@ int main()
 
 
 
-        // Draw
+        // Drawing everything
         window.draw(playerShape);
-        window.draw(hit);
 
         // draw the 2d walls
         for (const auto& wall : walls) {
@@ -231,7 +226,7 @@ int main()
             Wall currentWall = columns[i];
 
 
-            sf::Sprite wallSPRITE = RedBrickSprites[int(currentWall.getColumnToTexture())];
+            sf::Sprite wallSPRITE = Sprites[currentWall.getTextureNumber()][int(currentWall.getColumnToTexture())];
 
             wallSPRITE.setScale(10.f, currentWall.getHeight() / 64.f);
             wallSPRITE.setPosition(currentWall.getWall().getPosition().x, WindowTwoHeight / 2 - (currentWall.getHeight() / 2));
@@ -242,7 +237,7 @@ int main()
 
         // drawing a random brick on window1
         for (int i = 0; i < 64; i++) {
-            window.draw(RedBrickSprites[i]);
+            window.draw(Sprites[1][i]);
         }
 
 

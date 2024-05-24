@@ -61,3 +61,12 @@ float Wall::getDistance() {
 float Wall::getHeight() {
 	return this->height;
 }
+
+
+void Wall::setTextureNumber(int number) {
+	this->textureNumber = number;
+}
+
+int Wall::getTextureNumber() const {
+	return this->textureNumber;
+}

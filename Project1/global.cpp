@@ -1,4 +1,5 @@
 #include "global.h"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 
@@ -26,28 +27,27 @@ int playerHeight = 32;
 float projectionPlaneDistance = 277 * (WindowTwoWidth / rayCount);
 int wallHeight = 64;
 
-Image RedBrickImg;
-Texture RedBrickTextures[64];
-Sprite RedBrickSprites[64];
 
-Image DoomSkullImg;
-Texture DoomSkullTextures[64];
-Sprite DoomSkullSprites[64];
+Image Images[2];
+Texture Textures[2][64];
+Sprite Sprites[2][64];
+
 
 Sprite emptySPRITE;
 
 void loadTexturesAndSprites() {
-    RedBrickImg.loadFromFile("redbrick.png");
-    //DoomSkullImg.loadFromFile("163.png");
+    // red brick
+    Images[0].loadFromFile("redbrick.png");
+    // doom skull
+    Images[1].loadFromFile("doomskull.png");
 
-    for (int i = 0; i < 64; i++) {
-        RedBrickTextures[i].loadFromImage(RedBrickImg, sf::IntRect(i, 0, 1, 64));
-        RedBrickSprites[i].setTexture(RedBrickTextures[i]);
-        RedBrickSprites[i].setPosition(i + 500, 500);
 
-        //DoomSkullTextures[i].loadFromImage(DoomSkullImg, sf::IntRect(i, 0, 1, 64));
-        //DoomSkullSprites[i].setTexture(DoomSkullTextures[i]);
-        //DoomSkullSprites[i].setPosition(i + 400, 500);
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 64; j++) {
+            Textures[i][j].loadFromImage(Images[i], sf::IntRect(j, 0, 1, 64));
+            Sprites[i][j].setTexture(Textures[i][j]);
+            Sprites[i][j].setPosition(i * 64 + 100, 500);
+        }
     }
 
 

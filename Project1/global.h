@@ -3,6 +3,7 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <array>
 
 
 using namespace sf;
@@ -30,13 +31,13 @@ extern float projectionPlaneDistance;
 extern int wallHeight;
 
 
-extern Image RedBrickImg;
-extern Texture RedBrickTextures[64];
-extern Sprite RedBrickSprites[64];
 
-extern Image DoomSkullImg;
-extern Texture DoomSkullTextures[64];
-extern Sprite DoomSkullSprites[64];
+extern Image Images[2];
+extern Texture Textures[2][64];
+extern Sprite Sprites[2][64];
+
+
+
 
 
 extern Sprite emptySPRITE;
