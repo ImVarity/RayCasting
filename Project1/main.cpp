@@ -113,24 +113,12 @@ int main()
     Vertex random(Vector2f(1.f, 1.f));
     Vertex random2(Vector2f(1.f, 1.f));
 
-    Vertex line[] = {
-        Vertex(Vector2f(473, 345)),
-        random
-    };
-
-
-    Vertex line2[] = {
-        Vertex(Vector2f(473, 345)),
-        random2
-    };
 
     while (window.isOpen() && window2.isOpen())
     {
 
         Vector2i mousePositionInt = Mouse::getPosition(window);
         Vector2f mousePosition(static_cast<float>(mousePositionInt.x), static_cast<float>(mousePositionInt.y));
-        line[1].position.x = mousePosition.x;
-        line[1].position.y = mousePosition.y;
 
 
         Event event, event2;
@@ -158,183 +146,101 @@ int main()
         playerShape.setPosition(Vector2f(player.getDX(), player.getDY()));
 
 
-        float distanceToCursor = std::sqrt((473 - mousePosition.x) * (473 - mousePosition.x) + (345 - mousePosition.y) * (345 - mousePosition.y));
 
 
-
-        //Vector2f rayStart(473, 354);
-        //Vector2f rayDir(Vector2f(mousePosition.x - 473, mousePosition.y - 345) / distanceToCursor);
-        //Vector2i Step;
-        //Vector2f Traveled;
-        //Vector2f rayUnitStepSize = { sqrt(1 + (rayDir.y / rayDir.x) * (rayDir.y / rayDir.x)), sqrt(1 + (rayDir.x / rayDir.y) * (rayDir.x / rayDir.y)) };
-        //Vector2i MapLoc(rayStart.x / STEP, rayStart.y / STEP);
-
-
-
-
-
-
-        //line2[1].position.x = rayStart.x + (distance / rayUnitStepSize.x) * Step.x;
-        //line2[1].position.y = rayStart.y + (distance / rayUnitStepSize.y) * Step.y;
-
-
-
-
-        //
-        //for (float i = 0; i < FOV * 2; i++) {
-
-        //    float tempAngle = i / 2 + player.getAngle();
-        //    if (tempAngle >= 360) tempAngle -= 360;
-        //    if (tempAngle < 0) tempAngle += 360;
-
-
-        //    Vector2f rayDir(cos(tempAngle * PI / 180), sin(tempAngle * PI / 180));
-        //    Vector2f rayStart(playerShape.getPosition().x + playerOffset, playerShape.getPosition().y + playerOffset);
-        //    Vector2f Step;
-        //    Vector2f Traveled;
-        //    Vector2f rayUnitStepSize = { sqrt(1 + (rayDir.y / rayDir.x) * (rayDir.y / rayDir.x)), sqrt(1 + (rayDir.x / rayDir.y) * (rayDir.x / rayDir.y)) };
-        //    Vector2i MapLoc(rayStart.x / STEP, rayStart.y / STEP);
-
-        //    if (rayDir.x < 0) // the ray is pointing left
-        //    {
-        //        Step.x = -1;
-        //        Traveled.x = (rayStart.x - float(MapLoc.x) * STEP) * rayUnitStepSize.x;
-
-        //    }
-        //    else // the ray is pointing right
-        //    {
-        //        Step.x = 1;
-        //        Traveled.x = (float(MapLoc.x + 1) * STEP - rayStart.x) * rayUnitStepSize.x;
-        //    }
-        //    if (rayDir.y < 0) // the ray is pointing up
-        //    {
-        //        Step.y = -1;
-        //        Traveled.y = (rayStart.y - float(MapLoc.y) * STEP) * rayUnitStepSize.y;
-        //    }
-        //    else // the ray is pointing down
-        //    {
-        //        Step.y = 1;
-        //        Traveled.y = (float(MapLoc.y + 1) * STEP - rayStart.y) * rayUnitStepSize.y;
-        //    }
-
-
-        //    bool bTileFound = false;
-        //    float maxDistance = 1200.f;
-        //    float distance = 0.f;
-
-        //    while (!bTileFound && distance < maxDistance)
-        //    {
-        //        if (Traveled.x < Traveled.y)
-        //        {
-        //            MapLoc.x += Step.x;
-        //            distance = Traveled.x;
-        //            Traveled.x += rayUnitStepSize.x * STEP;
-        //        }
-        //        else
-        //        {
-        //            MapLoc.y += Step.y;
-        //            distance = Traveled.y;
-        //            Traveled.y += rayUnitStepSize.y * STEP;
-        //        }
-
-        //        if (MapLoc.x >= 0 && MapLoc.x < gridLength && MapLoc.y >= 0 && MapLoc.y < gridLength)
-        //        {
-        //            if (map.getMap()[MapLoc.y][MapLoc.x] == 1)
-        //            {
-        //                bTileFound = true;
-        //            }
-        //        }
-        //    }
-
-
-        //    float closestX = rayStart.x + (distance / rayUnitStepSize.x) * Step.x;
-        //    float closestY = rayStart.y + (distance / rayUnitStepSize.y) * Step.y;
-
-
-        //    rays[int(i * 2)].setHead(rayStart.x, rayStart.y);
-        //    rays[int(i * 2)].setTail(closestX, closestY);
-
-
-
-
-
-        //    //if (int(i * 2) < 120)
-        //    //    columns[int(i * 2)].CC(distance, i, closestt);
-
-
-        //}
-
-
+        
         for (int i = 0; i < FOV * 2; i++) {
+
             float tempAngle = float(i) / 2 + player.getAngle();
             if (tempAngle >= 360) tempAngle -= 360;
             if (tempAngle < 0) tempAngle += 360;
 
 
-            rays[int(i)].setHead(playerShape.getPosition().x + playerOffset, playerShape.getPosition().y + playerOffset);
-            rays[int(i)].setTail(playerShape.getPosition().x + cos(tempAngle * PI / 180) * rayLength, playerShape.getPosition().y + sin(tempAngle * PI / 180) * rayLength);
+            Vector2f rayDir(cos(tempAngle * PI / 180), sin(tempAngle * PI / 180));
+            Vector2f rayStart(playerShape.getPosition().x + playerOffset, playerShape.getPosition().y + playerOffset);
+            Vector2f Step;
+            Vector2f Traveled;
+            Vector2f rayUnitStepSize = { sqrt(1 + (rayDir.y / rayDir.x) * (rayDir.y / rayDir.x)), sqrt(1 + (rayDir.x / rayDir.y) * (rayDir.x / rayDir.y)) };
+            Vector2i MapLoc(rayStart.x / STEP, rayStart.y / STEP);
 
+            if (rayDir.x < 0) // the ray is pointing left
+            {
+                Step.x = -1;
+                Traveled.x = (rayStart.x - float(MapLoc.x) * STEP) * rayUnitStepSize.x;
 
-            float closestDistance = std::numeric_limits<float>::max();
-            float closestx = 0.0f;
-            float closesty = 0.0f;
-            float closestt = 0.0f;
-
-            for (int j = 0; j < walls.size(); j++) {
-                float* tu = lookAtWall(walls[j], rays[int(i)].getLine()[0].position, rays[int(i)].getLine()[1].position);
-                float t = tu[0];
-                float u = tu[1];
-
-
-                if (t > 0 && t < 1 && u > 0) {
-
-                   /* if (i == 0)
-                        std::cout << "t: " << t << " u: " << u << std::endl;*/
-
-                    float x1 = walls[j][0].position.x;
-                    float y1 = walls[j][0].position.y;
-                    float x2 = walls[j][1].position.x;
-                    float y2 = walls[j][1].position.y;
-
-
-                    float hitpointx = x1 + t * (x2 - x1);
-                    float hitpointy = y1 + t * (y2 - y1);
-
-                    float distance = std::sqrt((hitpointx - rays[int(i)].getLine()[0].position.x) * (hitpointx - rays[int(i)].getLine()[0].position.x) +
-                        (hitpointy - rays[int(i)].getLine()[0].position.y) * (hitpointy - rays[int(i)].getLine()[0].position.y));
-
-
-                    if (distance < closestDistance) {
-                        closestDistance = distance;
-                        closestx = hitpointx;
-                        closesty = hitpointy;
-                        closestt = t;
-                    }
-
-                }
-
-                
+            }
+            else // the ray is pointing right
+            {
+                Step.x = 1;
+                Traveled.x = (float(MapLoc.x + 1) * STEP - rayStart.x) * rayUnitStepSize.x;
+            }
+            if (rayDir.y < 0) // the ray is pointing up
+            {
+                Step.y = -1;
+                Traveled.y = (rayStart.y - float(MapLoc.y) * STEP) * rayUnitStepSize.y;
+            }
+            else // the ray is pointing down
+            {
+                Step.y = 1;
+                Traveled.y = (float(MapLoc.y + 1) * STEP - rayStart.y) * rayUnitStepSize.y;
             }
 
-            if (closestDistance != std::numeric_limits<float>::max())
-                rays[int(i)].setTail(closestx, closesty);
+
+            bool bTileFound = false;
+            float maxDistance = 1200.f;
+            float distance = 0.f;
+            float sideHit; // 1 = Hit vertical wall, 2 = Hit horizontal wall
+
+            while (!bTileFound && distance < maxDistance)
+            {
+                if (Traveled.x < Traveled.y)
+                {
+                    MapLoc.x += Step.x;
+                    distance = Traveled.x;
+                    Traveled.x += rayUnitStepSize.x * STEP;
+                    sideHit = 1;
+                }
+                else
+                {
+                    MapLoc.y += Step.y;
+                    distance = Traveled.y;
+                    Traveled.y += rayUnitStepSize.y * STEP;
+                    sideHit = 0;
+                }
+
+                if (MapLoc.x >= 0 && MapLoc.x < gridLength && MapLoc.y >= 0 && MapLoc.y < gridLength)
+                {
+                    if (map.getMap()[MapLoc.y][MapLoc.x] == 1)
+                    {
+                        bTileFound = true;
+                    }
+                }
+            }
+
+            Vector2f intersection(rayStart + rayDir * distance);
+
+            float T = 1;
+
+            rays[i].setHead(rayStart.x, rayStart.y);
+            rays[i].setTail(intersection.x, intersection.y);
 
 
-            if (int(i) < 120)
-                columns[int(i)].CC(closestDistance, float(i) / 2, closestt);
+            if (sideHit == 1)
+                T = std::fmod(intersection.y, 64.0f) / 64.f;
+            if (sideHit == 0)
+                T = std::fmod(intersection.x, 64.0f) / 64.f;
+
+
+            columns[i].CC(distance, float(i) / 2, T);
+
 
         }
-
-
-
 
 
 
         // Draw
         window.draw(playerShape);
         window.draw(hit);
-        //window.draw(line, 2, Lines);
-        window.draw(line2, 2, Lines);
 
         // draw the 2d walls
         for (const auto& wall : walls) {
