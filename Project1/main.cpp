@@ -15,34 +15,7 @@
 
 using namespace sf;
 
-
-void draw3D();
-
-float* lookAtWall(std::array<Vertex, 2> wall, Vector2f head, Vector2f tail) {
-
-    float tu[2];
-
-    float x1 = wall[0].position.x;
-    float y1 = wall[0].position.y;
-    float x2 = wall[1].position.x;
-    float y2 = wall[1].position.y;
-
-    float x3 = head.x;
-    float y3 = head.y;
-    float x4 = tail.x;
-    float y4 = tail.y;
-
-
-    float num = (x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4);
-    float den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-    
-    tu[0] = num / den;
-    tu[1] = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / den;
-
-
-    return tu;
-
-}
+#define rayCount 320
 
 int main()
 {
@@ -67,20 +40,25 @@ int main()
 
 
     // the columns on the projection screen
-    Wall columns[120];
+    Wall columns[320];
 
     // the rays in window1
-    ray rays[720];
+    ray rays[320];
 
 
     // each next ray increments by .5 degrees
     // might have to use more rays (doom uses 320 rays for 60 FOV)
+
+    float increment = float(FOV) / float(rayCount);
     float count = 0;
-    while (count < 360) {
-        rays[int(count * 2)].setAngle(count);
-        count += .5;
+    int sampleI = 0;
+    while (sampleI < 320) {
+        rays[sampleI].setAngle(count);
+        count += increment;
+        sampleI++;
     }
     
+
 
 
 
@@ -96,8 +74,6 @@ int main()
     Map map;
     map.createMap(walls);
 
-
-    float rayLength = 1000.f;
 
     Player player(WindowOneWidth / 2, WindowOneHeight / 2, 1.f);
 
@@ -146,12 +122,10 @@ int main()
         playerShape.setPosition(Vector2f(player.getDX(), player.getDY()));
 
 
-
-
-        
-        for (int i = 0; i < FOV * 2; i++) {
-
-            float tempAngle = float(i) / 2 + player.getAngle();
+        float rayAngle = 0;
+        int rayI = 0;
+        while (rayI < rayCount) {
+            float tempAngle = rayAngle + player.getAngle();
             if (tempAngle >= 360) tempAngle -= 360;
             if (tempAngle < 0) tempAngle += 360;
 
@@ -167,7 +141,6 @@ int main()
             {
                 Step.x = -1;
                 Traveled.x = (rayStart.x - float(MapLoc.x) * STEP) * rayUnitStepSize.x;
-
             }
             else // the ray is pointing right
             {
@@ -221,19 +194,20 @@ int main()
 
             float T = 1;
 
-            rays[i].setHead(rayStart.x, rayStart.y);
-            rays[i].setTail(intersection.x, intersection.y);
+            rays[rayI].setHead(rayStart.x, rayStart.y);
+            rays[rayI].setTail(intersection.x, intersection.y);
 
 
             if (sideHit == 1)
-                T = std::fmod(intersection.y, 64.0f) / 64.f;
+                T = std::fmod(intersection.y, STEP) / STEP;
             if (sideHit == 0)
-                T = std::fmod(intersection.x, 64.0f) / 64.f;
+                T = std::fmod(intersection.x, STEP) / STEP;
 
 
-            columns[i].CC(distance, float(i) / 2, T);
+            columns[rayI].CC(distance, rayAngle, T);
 
-
+            rayAngle += increment;
+            rayI++;
         }
 
 
@@ -248,22 +222,19 @@ int main()
         }
 
         // draw the rays
-        for (float i = 0; i < FOV; i += 0.5) {
-            window.draw(rays[int(i * 2)].getLine(), 2, Lines);
+        for (int i = 0; i < rayCount; i++) {
+            window.draw(rays[i].getLine(), 2, Lines);
         }
 
         // draw the textures on the 3d walls
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < rayCount; i++) {
             Wall currentWall = columns[i];
 
 
             sf::Sprite wallSPRITE = RedBrickSprites[int(currentWall.getColumnToTexture())];
 
-            if (currentWall.getDistance() > 255)
-                wallSPRITE = emptySPRITE;
-
             wallSPRITE.setScale(10.f, currentWall.getHeight() / 64.f);
-            wallSPRITE.setPosition(currentWall.getWall().getPosition().x, 800.f / 2 - (currentWall.getHeight() / 2));
+            wallSPRITE.setPosition(currentWall.getWall().getPosition().x, WindowTwoHeight / 2 - (currentWall.getHeight() / 2));
 
             window2.draw(wallSPRITE);
         }

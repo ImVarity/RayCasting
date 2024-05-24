@@ -154,6 +154,7 @@
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\163.png" />
     <Image Include="..\..\..\..\Desktop\mario_block.jpg" />
     <Image Include="..\..\..\..\Desktop\pics\redbrick.png" />
   </ItemGroup>

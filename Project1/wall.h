@@ -7,21 +7,12 @@ class Wall {
 public:
 	Wall();
 	
-	void drawWall3D(float distance, float column);
-
 
 	sf::RectangleShape getWall() const;
-	sf::Sprite wallTexture(float percentOfWall, float column3D, const sf::Color texture[][64]);
-
-
-
-	sf::Sprite getTexture();
-	sf::Image getImage();
 
 	void CC(float distance, float column, float percentOfWall);
 
 
-	float getPercentage();
 	float getHeight();
 	float getDistance();
 	float getColumnToTexture();

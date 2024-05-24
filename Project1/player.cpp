@@ -37,7 +37,6 @@ void Player::handleMovement(std::vector<std::vector<int>>& map) {
 
     if (this->moveUp && this->moveRight) // Diagonally up right
         this->location += Vector2f(cos(45 * M_PI / 180), -sin(45 * M_PI / 180)) * this->speed;
-
     else if (this->moveUp && this->moveLeft) // Diagonally up left
         this->location += Vector2f(-cos(45 * M_PI / 180), -sin(45 * M_PI / 180)) * this->speed;
     else if (this->moveDown && this->moveRight) // Diagonally down right

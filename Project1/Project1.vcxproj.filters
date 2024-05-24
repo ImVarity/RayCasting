@@ -61,5 +61,8 @@
     <Image Include="..\..\..\..\Desktop\mario_block.jpg">
       <Filter>Source Files</Filter>
     </Image>
+    <Image Include="..\..\..\..\Desktop\163.png">
+      <Filter>Source Files\imgs</Filter>
+    </Image>
   </ItemGroup>
 </Project>
